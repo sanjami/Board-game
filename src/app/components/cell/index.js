@@ -15,14 +15,14 @@ class Cell extends React.Component {
   }
 
   divClass = () => {
+    if(this.props.visitedFields.includes(this.props.item)){
+        return "green"
+      }
     if(this.props.game.includes(this.props.item)){
         return "yellow"
-      } else if(this.props.visitedFields.includes(this.props.item)){
-        return "green"
-      } else {
+      } 
       return "cell"
     }
-  }
 
   render() {
     return (

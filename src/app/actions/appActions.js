@@ -14,13 +14,6 @@ export function selectLevel(level) {
     };
   }
 
-export function selectFirstField(field) {
-  return {
-    type: SELECT_FIRST_FIELD,
-    field
-  }
-}
-
 export function newGame(game) {
   return {
     type: NEW_GAME,
