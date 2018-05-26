@@ -1,0 +1,36 @@
+
+.cell {
+    box-sizing: border-box;
+    background-color: red;
+    border: 1px solid black;
+    width:10%;
+    height: 80px;
+    float:left;
+}
+
+#active {
+    box-sizing: border-box;
+    background-color: rgb(194, 199, 174);
+    border: 1px solid black;
+    width:10%;
+    height: 80px;
+    float:left;
+}
+
+.yellow {
+    box-sizing: border-box;
+    background-color: yellow;
+    border: 1px solid black;
+    width:10%;
+    height: 80px;
+    float:left;
+}
+
+.green {
+    box-sizing: border-box;
+    background-color: green;
+    border: 1px solid black;
+    width:10%;
+    height: 80px;
+    float:left;
+}
