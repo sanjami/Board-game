@@ -1,7 +1,7 @@
 
 .cell {
     box-sizing: border-box;
-    background-color: red;
+    background-color: rgb(209, 170, 207);
     border: 1px solid black;
     width:10%;
     height: 80px;
