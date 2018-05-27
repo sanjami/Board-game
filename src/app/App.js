@@ -21,7 +21,8 @@ class App extends React.Component {
 
     this.state = {
       modalIsOpen: false,
-      modalType: ''
+      modalType: '',
+      time: 0
     };
   }
 
@@ -100,10 +101,26 @@ class App extends React.Component {
     this.props.onSetLife(parseInt(life) + 1)
   }
 
+  tick = () => {
+    this.setState((prevState) => ({
+      time: prevState.time + 1,
+    }));
+  }
+
+  resetTimer = () => {
+    this.setState({
+      time: 0
+    })
+  }
+
   handleSelectFirstField = (field) => {
 
     if ((this.props.game.length === 0) && (this.props.visitedFields.length === 0)) {
       this.startGame(field);
+
+      this.timer = setInterval(() => {
+        this.tick();
+      }, 1000);
 
     } else if ((this.props.visitedFields.length !== 0) && (this.props.activeFields.length !== 0)) {
       if (this.props.activeFields.includes(field)) {
@@ -124,6 +141,8 @@ class App extends React.Component {
         });
 
         if (activeFields.length === 0 && game.length > 0) {
+          clearInterval(this.timer);
+          this.resetTimer()
           let lostLifes = this.props.game.length;
           if(this.props.life - this.props.game.length > 0) {
             localStorage.setItem('life', this.props.life - this.props.game.length)
@@ -135,7 +154,8 @@ class App extends React.Component {
           this.openModal('losing');
 
         } else if (activeFields.length === 0 && game.length === 0) {
-
+          clearInterval(this.timer);
+          this.resetTimer()
           localStorage.setItem('life', this.props.life)
           localStorage.setItem('level', this.props.levelSelected);
           let maxLevel = localStorage.getItem('maxLevel');
@@ -156,7 +176,7 @@ class App extends React.Component {
         onRequestClose={this.closeModal}
         contentLabel="Example Modal"
       >
-        <h2 ref={subtitle => this.subtitle = subtitle}>You have complited level {this.props.level}</h2>
+        <h2 ref={subtitle => this.subtitle = subtitle}>You have complited level: {this.props.levelSelected}</h2>
         <button onClick={this.closeModal}>close</button>
         <div>Do you want to play next level?</div>
         <button onClick={this.handleNextGame}>yes</button>
@@ -192,17 +212,21 @@ class App extends React.Component {
 
     return (
       <React.Fragment>
-        <Table
+        <Table id="table"
           handleSelectFirstField={this.handleSelectFirstField}
           game={this.props.game}
           activeFields={this.props.activeFields}
           visitedFields={this.props.visitedFields}
         />
+        <div id="stat">
         <select name="level" onChange={this.handleLevelSelect} >
           {this.createLevelOptions()}
         </select>
         <div>You are playing level {this.props.levelSelected}</div>
+        <div>Time: {this.state.time}</div>
+        <div>Clicked: {this.props.visitedFields.length}</div>
         <div>Life: {this.props.life}</div>
+        </div>
         {this.renderModalComponent()}      
       </React.Fragment>
     );

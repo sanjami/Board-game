@@ -4,7 +4,7 @@
     background-color: rgb(209, 170, 207);
     border: 1px solid black;
     width:10%;
-    height: 80px;
+    height: 10%;
     float:left;
 }
 
@@ -13,7 +13,7 @@
     background-color: rgb(194, 199, 174);
     border: 1px solid black;
     width:10%;
-    height: 80px;
+    height: 10%;
     float:left;
 }
 
@@ -22,7 +22,7 @@
     background-color: yellow;
     border: 1px solid black;
     width:10%;
-    height: 80px;
+    height: 10%;
     float:left;
 }
 
@@ -31,6 +31,6 @@
     background-color: green;
     border: 1px solid black;
     width:10%;
-    height: 80px;
+    height: 10%;
     float:left;
 }
