@@ -8,8 +8,8 @@
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4",
     "react-modal": "^3.3.2",
-    "react-redux": "4.4.5",
-    "redux": "3.6.0"
+    "react-redux": "5.0.7",
+    "redux": "4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
