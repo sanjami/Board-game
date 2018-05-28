@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cell from '../cell/index';
 import { tableArr } from '../../../utils/constants'
-import './style.css';
 
 
 class Table extends React.Component {

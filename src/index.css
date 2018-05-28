@@ -1,17 +1,54 @@
+.cell, #active, .yellow, .green {
+  box-sizing: border-box;
+  border: 1px solid black;
+  width: 10%;
+  height: 10%;
+  float: left; }
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-}
+  width: 100%;
+  overflow: hidden; }
 
-#table {
-  width:50%;
-  height: 100vh;
-  float: left;
-}
+.modal {
+  position: absolute;
+  top: 30%;
+  left: 30%;
+  right: 30%;
+  bottom: 30%;
+  background-color: papayawhip;
+  text-align: center; }
 
-#stat {
-  width: 30%;
-  float: left;
-  margin: 20px;
-}
+.modalButton {
+  margin: 3%;
+  padding: 2%; }
+
+.cell {
+  background-color: #d1aacf; }
+
+#active {
+  background-color: #c2c7ae; }
+
+.yellow {
+  background-color: yellow; }
+
+.green {
+  background-color: green; }
+
+@media screen and (orientation: landscape) {
+  #table {
+    height: 100vh;
+    width: 100vh;
+    float: left; }
+  #stat {
+    float: left;
+    margin: 20px; } }
+
+@media screen and (orientation: portrait) {
+  #table {
+    width: 100vw;
+    height: 100vw; }
+  #stat {
+    margin: 20px; } }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Table from './components/table/index';
 import { createGame } from '../utils/gameConfig';
-import { gameOptions } from '../utils/constants';
+import { gameOptions, startLevel } from '../utils/constants';
 import Modal from 'react-modal';
 
 import {
@@ -27,23 +27,20 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(maxLevel?maxLevel:1);
-    let life = localStorage.getItem('life');
-    this.props.onSetLife(life?life:1);
+    this.handleNoModal()
   }
 
-  openModal(type) {
+  openModal = (type) => {
     this.setState({ modalIsOpen: true, modalType: type });
   }
 
-  closeModal() {
-    this.setState({ modalIsOpen: false });
+  closeModal = () => {
+    this.setState({ modalIsOpen: false, modalType: '' });
   }
 
   createLevelOptions = () => {
     let options = [];
-    for (let i = 1; i <= this.props.maxLevel; i++) {
+    for (let i = startLevel; i <= this.props.maxLevel; i++) {
       let option = <option key={i} value={i}>
         level {i}
       </option>
@@ -54,8 +51,7 @@ class App extends React.Component {
 
   startGame = (field) => {
     var game = createGame(field, this.props.levelSelected, gameOptions, [field]);
-    this.props.onCreateGame(game)
-
+    this.props.onCreateGame(game);
     var visitedFields = this.props.visitedFields
     visitedFields.push(field);
     this.props.onPlayingGame(visitedFields);
@@ -70,8 +66,8 @@ class App extends React.Component {
         return false;
       }
     });
-
     this.props.onActivateFields(activeFields);
+
     game = game.filter(element => element !== field);
     this.props.onCreateGame(game);
   }
@@ -93,12 +89,28 @@ class App extends React.Component {
     this.closeModal()
     this.props.onPlayingGame([]);
     this.props.onCreateGame([]);
-    var maxlevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(parseInt(maxlevel));
-    var level = localStorage.getItem('level');
+    let maxLevel = localStorage.getItem('maxLevel');
+    this.props.onSetMaxLevel(parseInt(maxLevel));
+    let level = localStorage.getItem('level');
     this.props.onNextGame(parseInt(level));
-    var life = localStorage.getItem('life');
+    let life = localStorage.getItem('life');
     this.props.onSetLife(parseInt(life) + 1)
+  }
+
+  handleNoModal = () => {
+    let maxLevel = localStorage.getItem('maxLevel');
+    this.props.onSetMaxLevel(maxLevel ? maxLevel : 1);
+    this.openModal('newGame');
+  }
+
+  handlePlayNewGame = () => {
+    this.props.onPlayingGame([]);
+    this.props.onCreateGame([]);
+    let maxLevel = localStorage.getItem('maxLevel');
+    this.props.onSetMaxLevel(maxLevel ? maxLevel : 1);
+    let life = localStorage.getItem('life');
+    this.props.onSetLife(life ? life : 0);
+    this.closeModal();    
   }
 
   tick = () => {
@@ -148,7 +160,7 @@ class App extends React.Component {
             localStorage.setItem('life', this.props.life - this.props.game.length)
           } else {
             localStorage.setItem('life', 0);
-            localStorage.setItem('maxlevel', 1);
+            localStorage.setItem('maxLevel', 1);
             localStorage.setItem('level', 1)
           }
           this.openModal('losing');
@@ -172,44 +184,60 @@ class App extends React.Component {
   renderWinningModal = () => {
     return (
       <Modal
+        className="modal"
         isOpen={this.state.modalIsOpen}
-        onRequestClose={this.closeModal}
         contentLabel="Example Modal"
       >
         <h2 ref={subtitle => this.subtitle = subtitle}>You have complited level: {this.props.levelSelected}</h2>
-        <button onClick={this.closeModal}>close</button>
         <div>Do you want to play next level?</div>
-        <button onClick={this.handleNextGame}>yes</button>
-        <button onClick={this.handleSameGame}>no</button>
+        <button className="modalButton" onClick={this.handleNextGame}>yes</button>
+        <button className="modalButton" onClick={this.handleNoModal}>no</button>
       </Modal>
     )
   }
 
   renderLosingModal = () => {
     return (
-      <Modal
+      <Modal 
+      className="modal"
         isOpen={this.state.modalIsOpen}
-        onRequestClose={this.closeModal}
         contentLabel="Example Modal"
       >
         <h2 ref={subtitle => this.subtitle = subtitle}>End game {this.props.level}</h2>
-        <button onClick={this.closeModal}>close</button>
         <div>You have lost this game. Do you want to play again?</div>
-        <button onClick={this.handleSameGame}>yes</button>
-        <button onClick={this.handleSameGame}>no</button>
+        <button className="modalButton" onClick={this.handleSameGame}>yes</button>
+        <button className="modalButton" onClick={this.handleNoModal}>no</button>
+      </Modal>
+    )
+  }
+
+  renderNewGameModal = () => {
+    return (
+      <Modal
+        className="modal"
+        isOpen={this.state.modalIsOpen}
+        contentLabel="Example Modal"
+      >
+        <h2 ref={subtitle => this.subtitle = subtitle}>Play new game</h2>
+        <div>Select level:</div>
+        <select name="level" onChange={this.handleLevelSelect} >
+          {this.createLevelOptions()}
+        </select>
+        <button className="modalButton" onClick={this.handlePlayNewGame}>start</button>
+        <button className="modalButton" onClick={this.handlePlayNewGame}>no</button>
       </Modal>
     )
   }
 
   renderModalComponent = () => {
     switch (this.state.modalType) {
-        case "winning": return this.renderWinningModal()
-        case "losing": return this.renderLosingModal()
+        case "winning": return this.renderWinningModal();
+        case "losing": return this.renderLosingModal();
+        case "newGame": return this.renderNewGameModal();
     }
 }
 
   render() {
-
     return (
       <React.Fragment>
         <Table id="table"
@@ -219,9 +247,6 @@ class App extends React.Component {
           visitedFields={this.props.visitedFields}
         />
         <div id="stat">
-        <select name="level" onChange={this.handleLevelSelect} >
-          {this.createLevelOptions()}
-        </select>
         <div>You are playing level {this.props.levelSelected}</div>
         <div>Time: {this.state.time}</div>
         <div>Clicked: {this.props.visitedFields.length}</div>
