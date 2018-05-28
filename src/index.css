@@ -3,7 +3,8 @@
   border: 1px solid black;
   width: 10%;
   height: 10%;
-  float: left; }
+  float: left;
+  color: transparent; }
 
 body {
   margin: 0;
@@ -26,7 +27,7 @@ body {
   padding: 2%; }
 
 .cell {
-  background-color: #d1aacf; }
+  background-color: #f4e4f3; }
 
 #active {
   background-color: #c2c7ae; }

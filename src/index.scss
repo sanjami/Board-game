@@ -3,7 +3,7 @@ $portrait-size: 100vw;
 
 %basic-cell {
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 1px solid #646262;
   width: 10%;
   height: 10%;
   float:left;
@@ -36,7 +36,7 @@ body {
 
 .cell {
   @extend %basic-cell;
-  background-color: rgb(209, 170, 207);
+  background-color: #f4e4f3;
 }
 
 #active {
