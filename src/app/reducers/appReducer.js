@@ -4,16 +4,18 @@ import {
     ACTIVATE_FIELDS,
     PLAY_GAME,
     SET_MAX_LEVEL,
-    SET_LIFE
+    SET_START_LEVEL,
+    SET_LIVES
  } from '../actions/actionTypes';
 
 const initialState = {
     levelSelected: 1,
     maxLevel: 1,
+    startLevel: 1,
     game: [],
     activeFields: [],
     visitedFields: [],
-    life: 0
+    lives: 0
 }
 
 export default function appReducer (state = initialState, action) {
@@ -43,10 +45,15 @@ export default function appReducer (state = initialState, action) {
                 ...state,
                 maxLevel: action.maxLevel
             }
-        case SET_LIFE:
+        case SET_START_LEVEL:
+            return {
+                ...state,
+                startLevel: action.minLevel
+            }
+        case SET_LIVES:
         return {
             ...state,
-            life: action.life
+            lives: action.lives
         }        
         default:
         return state;   

@@ -1,56 +1,34 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {
-  cellClicked
-} from '../../actions/cellActions';
 
+const Cell = (props) => {
 
-class Cell extends React.Component {
-
-  handleCellClicked = (event) => {
-    console.log(event.currentTarget)
-    this.props.onCellClicked(event.currentTarget);
-  }
-
-  divClass = () => {
-    if(this.props.visitedFields.includes(this.props.item)){
+  let divClass = () => {
+    if(props.visitedFields.includes(props.item)){
         return "green"
       }
-    if(this.props.game.includes(this.props.item)){
+    if(props.game.includes(props.item)){
         return "yellow"
       } 
       return "cell"
     }
-
-  render() {
+    
     return (
-      <div id={this.props.activeFields.includes(this.props.item) ? "active" : "cell"}
-        className={this.divClass()}
-        onClick={() => { this.props.handleSelectFirstField(this.props.item) }}>
-        {this.props.item}
+      <div 
+        id={props.activeFields.includes(props.item) ? "active" : "cell"}
+        className={divClass()}
+        onClick={() => { props.handleSelectFirstField(props.item) }}>
+          {props.item}
       </div>
     );
   }
-}
 
-Cell.propTypes = {
-  onCellClicked: PropTypes.func
+  Cell.propTypes = {
+    item: PropTypes.string,
+    game: PropTypes.array,
+    handleSelectFirstField: PropTypes.func,
+    activeFields: PropTypes.array,
 };
 
-const mapStateToProps = state => {
-  return {
-    cellSelected: state.cellReducer.cellSelected
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onCellClicked: (position) => dispatch(cellClicked(position)),
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Cell);
+export default Cell;

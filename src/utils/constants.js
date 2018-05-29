@@ -3,6 +3,6 @@ export const tableArr = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '
 
 export const gameOptions = [
     [0, 3], [0, -3], [3, 0], [-3, 0], [2, 2], [-2, -2], [-2, 2], [2, -2]
-]
+];
 
-export const startLevel = 1;
+export const minLevel = 5;

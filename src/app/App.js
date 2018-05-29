@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Table from './components/table/index';
 import { createGame } from '../utils/gameConfig';
-import { gameOptions, startLevel } from '../utils/constants';
+import { gameOptions, minLevel } from '../utils/constants';
 import Modal from 'react-modal';
 
 import {
@@ -12,7 +12,8 @@ import {
   activateFields,
   playGame,
   setMaxLevel,
-  setLife
+  setStartLevel,
+  setLives
 } from './actions/appActions'
 
 class App extends React.Component {
@@ -27,9 +28,16 @@ class App extends React.Component {
   }
 
   componentDidMount() {
+    let maxLevel = localStorage.getItem('maxLevel');
+    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
+    this.props.onSetStartLevel(minLevel);
     this.handleNoModal()
   }
 
+  componentWillMount() {
+    Modal.setAppElement('body');
+ }
+ 
   openModal = (type) => {
     this.setState({ modalIsOpen: true, modalType: type });
   }
@@ -40,7 +48,7 @@ class App extends React.Component {
 
   createLevelOptions = () => {
     let options = [];
-    for (let i = startLevel; i <= this.props.maxLevel; i++) {
+    for (let i = this.props.startLevel; i <= this.props.maxLevel; i++) {
       let option = <option key={i} value={i}>
         level {i}
       </option>
@@ -48,6 +56,7 @@ class App extends React.Component {
     }
     return options;
   }
+
 
   startGame = (field) => {
     var game = createGame(field, this.props.levelSelected, gameOptions, [field]);
@@ -81,8 +90,8 @@ class App extends React.Component {
     this.props.onPlayingGame([]);
     var level = localStorage.getItem('level');
     this.props.onNextGame(parseInt(level) + 1);
-    var life = localStorage.getItem('life');
-    this.props.onSetLife(parseInt(life) + 1)
+    var lives = localStorage.getItem('lives');
+    this.props.onSetLives(parseInt(lives))
   }
 
   handleSameGame = () => {
@@ -93,13 +102,11 @@ class App extends React.Component {
     this.props.onSetMaxLevel(parseInt(maxLevel));
     let level = localStorage.getItem('level');
     this.props.onNextGame(parseInt(level));
-    let life = localStorage.getItem('life');
-    this.props.onSetLife(parseInt(life) + 1)
+    let lives = localStorage.getItem('lives');
+    this.props.onSetLives(parseInt(lives))
   }
 
   handleNoModal = () => {
-    let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(maxLevel ? maxLevel : 1);
     this.openModal('newGame');
   }
 
@@ -107,10 +114,10 @@ class App extends React.Component {
     this.props.onPlayingGame([]);
     this.props.onCreateGame([]);
     let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(maxLevel ? maxLevel : 1);
-    let life = localStorage.getItem('life');
-    this.props.onSetLife(life ? life : 0);
-    this.closeModal();    
+    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
+    let lives = localStorage.getItem('lives');
+    this.props.onSetLives(lives ? parseInt(lives) : 0);
+    this.closeModal();
   }
 
   tick = () => {
@@ -155,20 +162,19 @@ class App extends React.Component {
         if (activeFields.length === 0 && game.length > 0) {
           clearInterval(this.timer);
           this.resetTimer()
-          let lostLifes = this.props.game.length;
-          if(this.props.life - this.props.game.length > 0) {
-            localStorage.setItem('life', this.props.life - this.props.game.length)
+          if (this.props.lives - this.props.game.length > 0) {
+            localStorage.setItem('lives', this.props.lives - this.props.game.length)
           } else {
-            localStorage.setItem('life', 0);
-            localStorage.setItem('maxLevel', 1);
-            localStorage.setItem('level', 1)
+            localStorage.setItem('lives', 0);
+            localStorage.setItem('maxLevel', this.props.startLevel);
+            localStorage.setItem('level', this.props.startLevel)
           }
           this.openModal('losing');
 
         } else if (activeFields.length === 0 && game.length === 0) {
           clearInterval(this.timer);
           this.resetTimer()
-          localStorage.setItem('life', this.props.life)
+          localStorage.setItem('lives', this.props.lives + 1)
           localStorage.setItem('level', this.props.levelSelected);
           let maxLevel = localStorage.getItem('maxLevel');
           if (maxLevel < this.props.levelSelected) {
@@ -188,7 +194,7 @@ class App extends React.Component {
         isOpen={this.state.modalIsOpen}
         contentLabel="Example Modal"
       >
-        <h2 ref={subtitle => this.subtitle = subtitle}>You have complited level: {this.props.levelSelected}</h2>
+        <h2 ref={subtitle => this.subtitle = subtitle}>You have completed level: {this.props.levelSelected}</h2>
         <div>Do you want to play next level?</div>
         <button className="modalButton" onClick={this.handleNextGame}>yes</button>
         <button className="modalButton" onClick={this.handleNoModal}>no</button>
@@ -198,8 +204,8 @@ class App extends React.Component {
 
   renderLosingModal = () => {
     return (
-      <Modal 
-      className="modal"
+      <Modal
+        className="modal"
         isOpen={this.state.modalIsOpen}
         contentLabel="Example Modal"
       >
@@ -220,7 +226,7 @@ class App extends React.Component {
       >
         <h2 ref={subtitle => this.subtitle = subtitle}>Play new game</h2>
         <div>Select level:</div>
-        <select name="level" onChange={this.handleLevelSelect} >
+        <select name="level" onClick={this.handleLevelSelect} >
           {this.createLevelOptions()}
         </select>
         <button className="modalButton" onClick={this.handlePlayNewGame}>start</button>
@@ -231,11 +237,12 @@ class App extends React.Component {
 
   renderModalComponent = () => {
     switch (this.state.modalType) {
-        case "winning": return this.renderWinningModal();
-        case "losing": return this.renderLosingModal();
-        case "newGame": return this.renderNewGameModal();
+      case "winning": return this.renderWinningModal();
+      case "losing": return this.renderLosingModal();
+      case "newGame": return this.renderNewGameModal();
     }
-}
+  }
+
 
   render() {
     return (
@@ -247,12 +254,12 @@ class App extends React.Component {
           visitedFields={this.props.visitedFields}
         />
         <div id="stat">
-        <div>You are playing level {this.props.levelSelected}</div>
-        <div>Time: {this.state.time}</div>
-        <div>Clicked: {this.props.visitedFields.length}</div>
-        <div>Life: {this.props.life}</div>
+          <div>You are playing level {this.props.levelSelected}</div>
+          <div>Time: {this.state.time}</div>
+          <div>Clicked: {this.props.visitedFields.length}</div>
+          <div>Lives: {this.props.lives}</div>
         </div>
-        {this.renderModalComponent()}      
+        {this.renderModalComponent()}
       </React.Fragment>
     );
   }
@@ -265,17 +272,25 @@ App.propTypes = {
   onPlayingGame: PropTypes.func,
   onNextGame: PropTypes.func,
   onSetMaxLevel: PropTypes.func,
-  onSetLife: PropTypes.func
+  onSetStartLevel: PropTypes.func,
+  onSetLives: PropTypes.func,
+  levelSelected: PropTypes.number,
+  maxLevel: PropTypes.number,
+  game: PropTypes.array,
+  activeFields: PropTypes.array,
+  visitedFields: PropTypes.array,
+  lives: PropTypes.number
 };
 
 const mapStateToProps = state => {
   return {
     levelSelected: state.appReducer.levelSelected,
     maxLevel: state.appReducer.maxLevel,
+    startLevel: state.appReducer.startLevel,
     game: state.appReducer.game,
     activeFields: state.appReducer.activeFields,
     visitedFields: state.appReducer.visitedFields,
-    life: state.appReducer.life
+    lives: state.appReducer.lives
   }
 }
 
@@ -287,7 +302,8 @@ const mapDispatchToProps = dispatch => {
     onPlayingGame: (visitedFields) => dispatch(playGame(visitedFields)),
     onNextGame: (level) => dispatch(selectLevel(level)),
     onSetMaxLevel: (maxLevel) => dispatch(setMaxLevel(maxLevel)),
-    onSetLife: (life) => dispatch(setLife(life))
+    onSetStartLevel: (minLevel) => dispatch(setStartLevel(minLevel)),
+    onSetLives: (lives) => dispatch(setLives(lives))
   }
 }
 

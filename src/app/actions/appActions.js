@@ -4,7 +4,8 @@ import {
   ACTIVATE_FIELDS,
   PLAY_GAME,
   SET_MAX_LEVEL,
-  SET_LIFE
+  SET_START_LEVEL,
+  SET_LIVES
  } from './actionTypes'
 
 
@@ -43,9 +44,16 @@ export function setMaxLevel(maxLevel) {
   }
 }
 
-export function setLife(life) {
+export function setStartLevel(minLevel) {
   return {
-    type: SET_LIFE,
-    life
+    type: SET_START_LEVEL,
+    minLevel
+  }
+}
+
+export function setLives(lives) {
+  return {
+    type: SET_LIVES,
+    lives
   }
 }

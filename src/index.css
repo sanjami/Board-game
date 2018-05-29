@@ -1,6 +1,6 @@
 .cell, #active, .yellow, .green {
   box-sizing: border-box;
-  border: 1px solid black;
+  border: 1px solid #646262;
   width: 10%;
   height: 10%;
   float: left;
@@ -15,15 +15,15 @@ body {
 
 .modal {
   position: absolute;
-  top: 30%;
-  left: 30%;
-  right: 30%;
-  bottom: 30%;
+  top: 25%;
+  left: 25%;
+  right: 25%;
+  bottom: 25%;
   background-color: papayawhip;
   text-align: center; }
 
 .modalButton {
-  margin: 3%;
+  margin: 2%;
   padding: 2%; }
 
 .cell {

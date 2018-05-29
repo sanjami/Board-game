@@ -5,42 +5,32 @@ import Cell from '../cell/index';
 import { tableArr } from '../../../utils/constants'
 
 
-class Table extends React.Component {
+const Table = (props) => {
+    
+    let content = tableArr.map((item, index) => (
+        <Cell
+            key={item}
+            item={item}
+            handleSelectFirstField={props.handleSelectFirstField}
+            game={props.game}
+            activeFields={props.activeFields}
+            visitedFields={props.visitedFields}
+        />
+    ));
 
-    render() {
-        let content = tableArr.map((item, index) => (
-            <Cell
-              key={item}
-              item={item}
-              handleSelectFirstField={this.props.handleSelectFirstField}
-              game={this.props.game}
-              activeFields={this.props.activeFields}
-              visitedFields={this.props.visitedFields}
-            />
-          ));
-        return <div id="table">
-                {content}
-            </div>
-    }
+    return (
+    <div id="table">
+        {content}
+    </div>
+    )
 }
 
-// table.propTypes = {
-//     id: PropTypes.number
-// };
+Table.propTypes = {
+    game: PropTypes.array,
+    handleSelectFirstField: PropTypes.func,
+    activeFields: PropTypes.array,
+    visitedFields: PropTypes.array
+};
 
-function mapStateToProps(state) {
-    return {
-        // stuffs: state.stuffs
-    };
-}
 
-function mapDispatchToProps(dispatch) {
-    return {
-        // stuffActions: bindActionCreators(stuffActions, dispatch)
-    };
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Table);
+export default Table;
