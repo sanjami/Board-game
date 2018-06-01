@@ -59,9 +59,9 @@ class App extends React.Component {
 
 
   startGame = (field) => {
-    var game = createGame(field, this.props.levelSelected, gameOptions, [field]);
+    let game = createGame(field, this.props.levelSelected, gameOptions, [field]);
     this.props.onCreateGame(game);
-    var visitedFields = this.props.visitedFields
+    let visitedFields = this.props.visitedFields
     visitedFields.push(field);
     this.props.onPlayingGame(visitedFields);
 
@@ -88,9 +88,9 @@ class App extends React.Component {
   handleNextGame = () => {
     this.closeModal()
     this.props.onPlayingGame([]);
-    var level = localStorage.getItem('level');
+    let level = localStorage.getItem('level');
     this.props.onNextGame(parseInt(level) + 1);
-    var lives = localStorage.getItem('lives');
+    let lives = localStorage.getItem('lives');
     this.props.onSetLives(parseInt(lives))
   }
 
@@ -107,16 +107,16 @@ class App extends React.Component {
   }
 
   handleNoModal = () => {
-    this.openModal('newGame');
-  }
-
-  handlePlayNewGame = () => {
     this.props.onPlayingGame([]);
     this.props.onCreateGame([]);
     let maxLevel = localStorage.getItem('maxLevel');
     this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
     let lives = localStorage.getItem('lives');
     this.props.onSetLives(lives ? parseInt(lives) : 0);
+    this.openModal('newGame');
+  }
+
+  handlePlayNewGame = () => {
     this.closeModal();
   }
 
@@ -143,9 +143,9 @@ class App extends React.Component {
 
     } else if ((this.props.visitedFields.length !== 0) && (this.props.activeFields.length !== 0)) {
       if (this.props.activeFields.includes(field)) {
-        var game = this.props.game.filter(element => element !== field)
+        let game = this.props.game.filter(element => element !== field)
         this.props.onCreateGame(game)
-        var visitedFields = this.props.visitedFields;
+        let visitedFields = this.props.visitedFields;
         visitedFields.push(field);
         this.props.onPlayingGame(visitedFields);
         let activeFields = game.filter(element => {
@@ -162,8 +162,10 @@ class App extends React.Component {
         if (activeFields.length === 0 && game.length > 0) {
           clearInterval(this.timer);
           this.resetTimer()
+          console.log(this.props);
+          console.log(game.length)
           if (this.props.lives - this.props.game.length > 0) {
-            localStorage.setItem('lives', this.props.lives - this.props.game.length)
+            localStorage.setItem('lives', this.props.lives - game.length)
           } else {
             localStorage.setItem('lives', 0);
             localStorage.setItem('maxLevel', this.props.startLevel);
@@ -256,7 +258,7 @@ class App extends React.Component {
         <div id="stat">
           <div>You are playing level {this.props.levelSelected}</div>
           <div>Time: {this.state.time}</div>
-          <div>Clicked: {this.props.visitedFields.length}</div>
+          <div>Left to click: {this.props.game.length}</div>
           <div>Lives: {this.props.lives}</div>
         </div>
         {this.renderModalComponent()}
