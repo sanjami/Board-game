@@ -33,7 +33,7 @@ class App extends React.Component {
 
   componentDidMount() {
     let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
+    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel, 10) : minLevel);
     this.props.onSetMinLevel(minLevel);
     this.handleNoModal()
   }
@@ -78,7 +78,7 @@ class App extends React.Component {
   }
 
   handleLevelSelect = (event) => {
-    this.props.onSetLevel(parseInt(event.target.value));
+    this.props.onSetLevel(parseInt(event.target.value, 10));
   }
 
   handlePlayNextLevel = () => {
@@ -86,24 +86,24 @@ class App extends React.Component {
     this.props.onResetGame();
     this.props.onSetLevel(this.props.currentLevel + 1);
     let lives = localStorage.getItem('lives');
-    this.props.onSetLives(parseInt(lives))
+    this.props.onSetLives(parseInt(lives, 10))
   }
 
   handlePlaySameLavel = () => {
     this.closeModal()
     this.props.onResetGame();
     let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(parseInt(maxLevel));
+    this.props.onSetMaxLevel(parseInt(maxLevel, 10));
     let lives = localStorage.getItem('lives');
-    this.props.onSetLives(parseInt(lives))
+    this.props.onSetLives(parseInt(lives, 10))
   }
 
   handleNoModal = () => {
     this.props.onResetGame();
     let maxLevel = localStorage.getItem('maxLevel');
-    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
+    this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel, 10) : minLevel);
     let lives = localStorage.getItem('lives');
-    this.props.onSetLives(lives ? parseInt(lives) : 0);
+    this.props.onSetLives(lives ? parseInt(lives, 10) : 0);
     this.openModal('newGame');
   }
 
@@ -248,6 +248,7 @@ class App extends React.Component {
       case "winning": return this.renderWinningModal();
       case "lost": return this.renderLostModal();
       case "newGame": return this.renderNewGameModal();
+      default: return null
     }
   }
 
