@@ -4,36 +4,37 @@ import PropTypes from 'prop-types';
 import Modal from 'react-modal';
 import Table from './components/table/index';
 import Score from './components/score/index';
-import { createGame } from '../utils/gameConfig';
-import { gameOptions, minLevel } from '../utils/constants';
+import { createGame } from '../utils/createGame';
+import { moveOptions } from '../utils/constants';
+import { minLevel } from '../utils/gameConfig';
+import { checkActiveFields } from '../utils/utils';
 import LevelCompleted from '../entities/levelCompleted'
 
 import {
-  selectLevel,
-  newGame,
-  activateFields,
-  playGame,
+  setLevel,
   setMaxLevel,
-  setStartLevel,
+  setMinLevel,
+  setRemainingFields,
+  setActiveFields,
+  setVisitedFields,
   setLives,
+  resetGame,
   setLevelsCompleted
 } from './actions/appActions'
 
 class App extends React.Component {
-  constructor() {
-    super();
 
-    this.state = {
+  state = {
       modalIsOpen: false,
       modalType: '',
       time: 0,
     };
-  }
+  
 
   componentDidMount() {
     let maxLevel = localStorage.getItem('maxLevel');
     this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
-    this.props.onSetStartLevel(minLevel);
+    this.props.onSetMinLevel(minLevel);
     this.handleNoModal()
   }
 
@@ -49,9 +50,9 @@ class App extends React.Component {
     this.setState({ modalIsOpen: false, modalType: '' });
   }
 
-  createLevelOptions = () => {
+  createLevelOptionsMenu = () => {
     let options = [];
-    for (let i = this.props.startLevel; i <= this.props.maxLevel; i++) {
+    for (let i = this.props.minLevel; i <= this.props.maxLevel; i++) {
       let option = <option key={i} value={i}>
         level {i}
       </option>
@@ -62,65 +63,48 @@ class App extends React.Component {
 
 
   startGame = (field) => {
-    let game = createGame(field, this.props.levelSelected, gameOptions, [field]);
-    this.props.onCreateGame(game);
-    let visitedFields = this.props.visitedFields
+
+    let remainingFields = createGame(field, this.props.currentLevel, moveOptions, [field]);
+
+    let visitedFields = [];
     visitedFields.push(field);
-    this.props.onPlayingGame(visitedFields);
+    this.props.onSetVisitedFields(visitedFields);
 
-    let activeFields = game.filter(element => {
-      let a = Math.abs(parseInt(element[0]) - parseInt(field[0]));
-      let b = Math.abs(parseInt(element[1]) - parseInt(field[1]));
-      let br = a.toString() + b.toString()
-      if (br === '03' || br === '30' || br === '22') {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    this.props.onActivateFields(activeFields);
+    let activeFields = checkActiveFields(remainingFields, field);
+    this.props.onSetActiveFields(activeFields);
 
-    game = game.filter(element => element !== field);
-    this.props.onCreateGame(game);
+    remainingFields = remainingFields.filter(element => element !== field);
+    this.props.onSetRemaningFields(remainingFields);
   }
 
   handleLevelSelect = (event) => {
-    this.props.onLevelSelected(parseInt(event.target.value));
+    this.props.onSetLevel(parseInt(event.target.value));
   }
 
-  handleNextGame = () => {
+  handlePlayNextLevel = () => {
     this.closeModal()
-    this.props.onPlayingGame([]);
-    let level = parseInt(localStorage.getItem('level'));
-    this.props.onNextGame(level + 1);
+    this.props.onResetGame();
+    this.props.onSetLevel(this.props.currentLevel + 1);
     let lives = localStorage.getItem('lives');
     this.props.onSetLives(parseInt(lives))
   }
 
-  handleSameGame = () => {
+  handlePlaySameLavel = () => {
     this.closeModal()
-    this.props.onPlayingGame([]);
-    this.props.onCreateGame([]);
+    this.props.onResetGame();
     let maxLevel = localStorage.getItem('maxLevel');
     this.props.onSetMaxLevel(parseInt(maxLevel));
-    let level = parseInt(localStorage.getItem('level'));
-    this.props.onNextGame(level);
     let lives = localStorage.getItem('lives');
     this.props.onSetLives(parseInt(lives))
   }
 
   handleNoModal = () => {
-    this.props.onPlayingGame([]);
-    this.props.onCreateGame([]);
+    this.props.onResetGame();
     let maxLevel = localStorage.getItem('maxLevel');
     this.props.onSetMaxLevel(maxLevel && (maxLevel > minLevel) ? parseInt(maxLevel) : minLevel);
     let lives = localStorage.getItem('lives');
     this.props.onSetLives(lives ? parseInt(lives) : 0);
     this.openModal('newGame');
-  }
-
-  handlePlayNewGame = () => {
-    this.closeModal();
   }
 
   tick = () => {
@@ -137,7 +121,8 @@ class App extends React.Component {
 
   handleSelectFirstField = (field) => {
 
-    if ((this.props.game.length === 0) && (this.props.visitedFields.length === 0)) {
+    if ((this.props.remainingFields.length === 0) && (this.props.visitedFields.length === 0)) {
+
       this.startGame(field);
 
       this.timer = setInterval(() => {
@@ -146,47 +131,36 @@ class App extends React.Component {
 
     } else if ((this.props.visitedFields.length !== 0) && (this.props.activeFields.length !== 0)) {
       if (this.props.activeFields.includes(field)) {
-        let game = this.props.game.filter(element => element !== field)
-        this.props.onCreateGame(game)
+        let remainingFields = this.props.remainingFields.filter(element => element !== field)
+        this.props.onSetRemaningFields(remainingFields)
         let visitedFields = this.props.visitedFields;
         visitedFields.push(field);
-        this.props.onPlayingGame(visitedFields);
-        let activeFields = game.filter(element => {
-          let a = Math.abs(parseInt(element[0]) - parseInt(field[0]));
-          let b = Math.abs(parseInt(element[1]) - parseInt(field[1]));
-          let br = a.toString() + b.toString()
-          if (br === '03' || br === '30' || br === '22') {
-            return true;
-          } else {
-            return false;
-          }
-        });
+        this.props.onSetVisitedFields(visitedFields);
+        let activeFields = checkActiveFields(remainingFields, field);
 
-        if (activeFields.length === 0 && game.length > 0) {
+        if (activeFields.length === 0 && remainingFields.length > 0) {
           clearInterval(this.timer);
           this.resetTimer()
 
-          if (this.props.lives - this.props.game.length > 0) {
-            localStorage.setItem('lives', this.props.lives - game.length)
+          if (this.props.lives > this.props.remainingFields.length) {
+            localStorage.setItem('lives', this.props.lives - remainingFields.length)
           } else {
             localStorage.setItem('lives', 0);
-            localStorage.setItem('maxLevel', this.props.startLevel);
-            localStorage.setItem('level', this.props.startLevel)
+            localStorage.setItem('maxLevel', this.props.minLevel);
+            this.props.onSetLevel(this.props.minLevel);
           }
-          this.openModal('losing');
+          this.openModal('lost');
 
-        } else if (activeFields.length === 0 && game.length === 0) {
+        } else if (activeFields.length === 0 && remainingFields.length === 0) {
           clearInterval(this.timer);
           localStorage.setItem('lives', this.props.lives + 1);
-          localStorage.setItem('level', this.props.levelSelected);
-
 
           var existingLevels = JSON.parse(localStorage.getItem('levelsCompleted'));
 
           if (existingLevels) {
-            if (existingLevels.filter(element => element.name === this.props.levelSelected).length > 0) {
+            if (existingLevels.filter(element => element.name === this.props.currentLevel).length > 0) {
               let newArr = existingLevels.map(element => {
-                if (element.name === this.props.levelSelected) {
+                if (element.name === this.props.currentLevel) {
                   element.times.push(this.state.time)
                 }
                 return element
@@ -197,27 +171,27 @@ class App extends React.Component {
 
             } else {
 
-              let levelCompleted = new LevelCompleted(this.props.levelSelected);
+              let levelCompleted = new LevelCompleted(this.props.currentLevel);
               levelCompleted.addTime(this.state.time);
               localStorage.setItem('levelsCompleted', JSON.stringify([...existingLevels, levelCompleted]));
               this.props.onSetLevelsCompleted([...existingLevels, levelCompleted]);
             }
           }
           else {
-            let levelCompleted = new LevelCompleted(this.props.levelSelected);
+            let levelCompleted = new LevelCompleted(this.props.currentLevel);
             levelCompleted.addTime(this.state.time);
             localStorage.setItem('levelsCompleted', JSON.stringify([levelCompleted]));
             this.props.onSetLevelsCompleted([levelCompleted]);
           }
 
           let maxLevel = localStorage.getItem('maxLevel');
-          if (maxLevel < this.props.levelSelected) {
-            localStorage.setItem('maxLevel', this.props.levelSelected)
+          if (maxLevel < this.props.currentLevel) {
+            localStorage.setItem('maxLevel', this.props.currentLevel)
           }
           this.resetTimer();
           this.openModal('winning');
         }
-        this.props.onActivateFields(activeFields);
+        this.props.onSetActiveFields(activeFields);
       }
     }
   }
@@ -229,26 +203,24 @@ class App extends React.Component {
       <Modal
         className="modal"
         isOpen={this.state.modalIsOpen}
-        contentLabel="Example Modal"
       >
-        <h2 ref={subtitle => this.subtitle = subtitle}>You have completed level: {this.props.levelSelected.name}</h2>
+        <h2 ref={subtitle => this.subtitle = subtitle}>You have completed level: {this.props.currentLevel}</h2>
         <div>Do you want to play next level?</div>
-        <button className="modalButton" onClick={this.handleNextGame}>yes</button>
+        <button className="modalButton" onClick={this.handlePlayNextLevel}>yes</button>
         <button className="modalButton" onClick={this.handleNoModal}>no</button>
       </Modal>
     )
   }
 
-  renderLosingModal = () => {
+  renderLostModal = () => {
     return (
       <Modal
         className="modal"
         isOpen={this.state.modalIsOpen}
-        contentLabel="Example Modal"
       >
         <h2 ref={subtitle => this.subtitle = subtitle}>End game</h2>
         <div>You have lost this game. Do you want to play again?</div>
-        <button className="modalButton" onClick={this.handleSameGame}>yes</button>
+        <button className="modalButton" onClick={this.handlePlaySameLavel}>yes</button>
         <button className="modalButton" onClick={this.handleNoModal}>no</button>
       </Modal>
     )
@@ -259,15 +231,14 @@ class App extends React.Component {
       <Modal
         className="modal"
         isOpen={this.state.modalIsOpen}
-        contentLabel="Example Modal"
       >
         <h2 ref={subtitle => this.subtitle = subtitle}>Play new game</h2>
         <div>Select level:</div>
         <select name="level" onClick={this.handleLevelSelect} >
-          {this.createLevelOptions()}
+          {this.createLevelOptionsMenu()}
         </select>
-        <button className="modalButton" onClick={this.handlePlayNewGame}>start</button>
-        <button className="modalButton" onClick={this.handlePlayNewGame}>no</button>
+        <button className="modalButton" onClick={this.closeModal}>start</button>
+        <button className="modalButton" onClick={this.closeModal}>no</button>
       </Modal>
     )
   }
@@ -275,7 +246,7 @@ class App extends React.Component {
   renderModalComponent = () => {
     switch (this.state.modalType) {
       case "winning": return this.renderWinningModal();
-      case "losing": return this.renderLosingModal();
+      case "lost": return this.renderLostModal();
       case "newGame": return this.renderNewGameModal();
     }
   }
@@ -286,14 +257,14 @@ class App extends React.Component {
       <React.Fragment>
         <Table id="table"
           handleSelectFirstField={this.handleSelectFirstField}
-          game={this.props.game}
+          remainingFields={this.props.remainingFields}
           activeFields={this.props.activeFields}
           visitedFields={this.props.visitedFields}
         />
         <div id="stat">
-          <div>You are playing level {this.props.levelSelected}</div>
+          <div>You are playing level {this.props.currentLevel}</div>
           <div>Time: {this.state.time}</div>
-          <div>Left to click: {this.props.game.length}</div>
+          <div>Left to click: {this.props.remainingFields.length}</div>
           <div>Lives: {this.props.lives}</div>
         </div>
       <Score 
@@ -306,18 +277,18 @@ class App extends React.Component {
 }
 
 App.propTypes = {
-  onLevelSelected: PropTypes.func,
-  onCreateGame: PropTypes.func,
-  onActivateFields: PropTypes.func,
-  onPlayingGame: PropTypes.func,
-  onNextGame: PropTypes.func,
+  onSetLevel: PropTypes.func,
   onSetMaxLevel: PropTypes.func,
-  onSetStartLevel: PropTypes.func,
+  onSetMinLevel: PropTypes.func,
+  onSetRemaningFields: PropTypes.func,
+  onSetActiveFields: PropTypes.func,
+  onSetVisitedFields: PropTypes.func,
   onSetLives: PropTypes.func,
   onSetLevelsCompleted: PropTypes.func,
-  levelSelected: PropTypes.number,
+  onResetGame: PropTypes.func,
+  currentLevel : PropTypes.number,
   maxLevel: PropTypes.number,
-  game: PropTypes.array,
+  remainingFields: PropTypes.array,
   activeFields: PropTypes.array,
   visitedFields: PropTypes.array,
   lives: PropTypes.number,
@@ -326,10 +297,10 @@ App.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    levelSelected: state.appReducer.levelSelected,
+    currentLevel: state.appReducer.currentLevel,
     maxLevel: state.appReducer.maxLevel,
-    startLevel: state.appReducer.startLevel,
-    game: state.appReducer.game,
+    minLevel: state.appReducer.minLevel,
+    remainingFields: state.appReducer.remainingFields,
     activeFields: state.appReducer.activeFields,
     visitedFields: state.appReducer.visitedFields,
     lives: state.appReducer.lives,
@@ -339,14 +310,14 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLevelSelected: (level) => dispatch(selectLevel(level)),
-    onCreateGame: (game) => dispatch(newGame(game)),
-    onActivateFields: (activeFields) => dispatch(activateFields(activeFields)),
-    onPlayingGame: (visitedFields) => dispatch(playGame(visitedFields)),
-    onNextGame: (level) => dispatch(selectLevel(level)),
+    onSetLevel: (level) => dispatch(setLevel(level)),
     onSetMaxLevel: (maxLevel) => dispatch(setMaxLevel(maxLevel)),
-    onSetStartLevel: (minLevel) => dispatch(setStartLevel(minLevel)),
+    onSetMinLevel: (minLevel) => dispatch(setMinLevel(minLevel)),
+    onSetRemaningFields: (remainingFields) => dispatch(setRemainingFields(remainingFields)),
+    onSetActiveFields: (activeFields) => dispatch(setActiveFields(activeFields)),
+    onSetVisitedFields: (visitedFields) => dispatch(setVisitedFields(visitedFields)),
     onSetLives: (lives) => dispatch(setLives(lives)),
+    onResetGame: () => dispatch(resetGame()),
     onSetLevelsCompleted: (levelCompleted) => dispatch(setLevelsCompleted(levelCompleted))
   }
 }

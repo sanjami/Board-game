@@ -8,7 +8,7 @@ const Cell = (props) => {
     if(props.visitedFields.includes(props.item)){
         return "green"
       }
-    if(props.game.includes(props.item)){
+    if(props.remainingFields.includes(props.item)){
         return "yellow"
       } 
       return "cell"
@@ -26,7 +26,7 @@ const Cell = (props) => {
 
   Cell.propTypes = {
     item: PropTypes.string,
-    game: PropTypes.array,
+    remainingFields: PropTypes.array,
     handleSelectFirstField: PropTypes.func,
     activeFields: PropTypes.array,
 };

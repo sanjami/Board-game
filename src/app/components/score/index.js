@@ -3,13 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 class Score extends React.Component {
-    constructor() {
-        super()
 
-        this.state = {
-            showTimes: false,
-        }
+    state = {
+        showTimes: false,
     }
+
 
     handleShowTimes = () => {
         this.setState((prevState) => ({
@@ -36,7 +34,7 @@ class Score extends React.Component {
                                 <td onClick={this.handleShowTimes} id={row.name}>
                                     {`${Math.max(...row.times)} seconds`}
                                     <ul className={this.state.showTimes ? "visible" : "invisible"}>
-                                        {row.times.map((time, j) => <li key={i+j}>{`${time} seconds`}</li>)}
+                                        {row.times.map((time, j) => <li key={i + j}>{`${time} seconds`}</li>)}
                                     </ul>
                                 </td>
                                 <td>{row.times.length}</td>

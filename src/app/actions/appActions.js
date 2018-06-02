@@ -1,41 +1,21 @@
-import { 
-  SELECT_LEVEL,
-  NEW_GAME,
-  ACTIVATE_FIELDS,
-  PLAY_GAME,
+import {
+  SET_CURRENT_LEVEL,
   SET_MAX_LEVEL,
-  SET_START_LEVEL,
+  SET_MIN_LEVEL,
+  SET_REMAINING_FIELDS,
+  SET_ACTIVE_FIELDS,
+  SET_VISITED_FIELDS,
   SET_LIVES,
+  RESET_GAME,
   SET_LEVELS_COMPLETED
- } from './actionTypes'
+} from './actionTypes'
 
 
-export function selectLevel(level) {
-    return {
-      type: SELECT_LEVEL,
-      level
-    };
-  }
-
-export function newGame(game) {
+export function setLevel(level) {
   return {
-    type: NEW_GAME,
-    game
-  }
-}
-
-export function activateFields(activeFields) {
-  return {
-    type: ACTIVATE_FIELDS,
-    activeFields
-  }
-}
-
-export function playGame(visitedFields) {
-  return {
-    type: PLAY_GAME,
-    visitedFields
-  }
+    type: SET_CURRENT_LEVEL,
+    level
+  };
 }
 
 export function setMaxLevel(maxLevel) {
@@ -45,10 +25,31 @@ export function setMaxLevel(maxLevel) {
   }
 }
 
-export function setStartLevel(minLevel) {
+export function setMinLevel(minLevel) {
   return {
-    type: SET_START_LEVEL,
+    type: SET_MIN_LEVEL,
     minLevel
+  }
+}
+
+export function setRemainingFields(remainingFields) {
+  return {
+    type: SET_REMAINING_FIELDS,
+    remainingFields
+  }
+}
+
+export function setActiveFields(activeFields) {
+  return {
+    type: SET_ACTIVE_FIELDS,
+    activeFields
+  }
+}
+
+export function setVisitedFields(visitedFields) {
+  return {
+    type: SET_VISITED_FIELDS,
+    visitedFields
   }
 }
 
@@ -56,6 +57,12 @@ export function setLives(lives) {
   return {
     type: SET_LIVES,
     lives
+  }
+}
+
+export function resetGame() {
+  return {
+    type: RESET_GAME
   }
 }
 

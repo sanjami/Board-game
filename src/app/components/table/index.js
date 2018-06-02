@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Cell from '../cell/index';
-import { tableArr } from '../../../utils/constants'
+import { board } from '../../../utils/constants'
 
 
 const Table = (props) => {
     
-    let content = tableArr.map((item, index) => (
+    let content = board.map((item, index) => (
         <Cell
             key={item}
             item={item}
             handleSelectFirstField={props.handleSelectFirstField}
-            game={props.game}
+            remainingFields={props.remainingFields}
             activeFields={props.activeFields}
             visitedFields={props.visitedFields}
         />
@@ -26,7 +26,7 @@ const Table = (props) => {
 }
 
 Table.propTypes = {
-    game: PropTypes.array,
+    remainingFields: PropTypes.array,
     handleSelectFirstField: PropTypes.func,
     activeFields: PropTypes.array,
     visitedFields: PropTypes.array
