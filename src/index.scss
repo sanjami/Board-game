@@ -77,3 +77,20 @@ body {
     margin: 20px;
   }
 }
+
+.invisible {
+  display: none
+ }  
+ 
+ .visible {
+   list-style: none;
+ }
+ 
+ table tr td{
+   border: 1px solid black;
+ }
+ 
+ td {
+   vertical-align: top;
+   text-align: center;
+ }

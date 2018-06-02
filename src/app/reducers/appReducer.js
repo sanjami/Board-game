@@ -5,7 +5,8 @@ import {
     PLAY_GAME,
     SET_MAX_LEVEL,
     SET_START_LEVEL,
-    SET_LIVES
+    SET_LIVES,
+    SET_LEVELS_COMPLETED
  } from '../actions/actionTypes';
 
 const initialState = {
@@ -15,7 +16,8 @@ const initialState = {
     game: [],
     activeFields: [],
     visitedFields: [],
-    lives: 0
+    lives: 0,
+    levelsCompleted: []
 }
 
 export default function appReducer (state = initialState, action) {
@@ -54,7 +56,12 @@ export default function appReducer (state = initialState, action) {
         return {
             ...state,
             lives: action.lives
-        }        
+        }
+        case SET_LEVELS_COMPLETED:
+        return {
+            ...state,
+            levelsCompleted: action.levelCompleted
+        }     
         default:
         return state;   
     } 

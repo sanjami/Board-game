@@ -5,7 +5,8 @@ import {
   PLAY_GAME,
   SET_MAX_LEVEL,
   SET_START_LEVEL,
-  SET_LIVES
+  SET_LIVES,
+  SET_LEVELS_COMPLETED
  } from './actionTypes'
 
 
@@ -55,5 +56,12 @@ export function setLives(lives) {
   return {
     type: SET_LIVES,
     lives
+  }
+}
+
+export function setLevelsCompleted(levelCompleted) {
+  return {
+    type: SET_LEVELS_COMPLETED,
+    levelCompleted
   }
 }
