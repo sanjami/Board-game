@@ -6,4 +6,5 @@ export const ACTIVATE_FIELDS = 'ACTIVATE_FIELDS';
 export const PLAY_GAME = 'PLAY_GAME';
 export const SET_MAX_LEVEL = 'SET_MAX_LEVEL';
 export const SET_START_LEVEL = 'SET_START_LEVEL';
-export const SET_LIVES = 'SET_LIVES'
+export const SET_LIVES = 'SET_LIVES';
+export const SET_LEVELS_COMPLETED = 'SET_LEVELS_COMPLETED'
