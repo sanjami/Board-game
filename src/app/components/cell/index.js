@@ -1,15 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 const Cell = (props) => {
 
   let divClass = () => {
     if(props.visitedFields.includes(props.item)){
-        return "green"
+        return "visited"
       }
     if(props.remainingFields.includes(props.item)){
-        return "yellow"
+        return "remaining"
       } 
       return "cell"
     }
@@ -18,8 +17,8 @@ const Cell = (props) => {
       <div 
         id={props.activeFields.includes(props.item) ? "active" : "cell"}
         className={divClass()}
-        onClick={() => { props.handleSelectFirstField(props.item) }}>
-          {props.item}
+        onClick={() => { props.handleSelectFirstField(props.item) }}
+        >
       </div>
     );
   }

@@ -24,34 +24,35 @@ body {
   left: 25%;
   right: 25%;
   bottom: 25%;
-  background-color: papayawhip;
+  background-color: #50b3e7b0;
   text-align: center
 }
 
 .modalButton {
   margin: 2%;
-  padding: 2%;
+  padding: 1%;
+  color: black !important;
 }
 
 
 .cell {
   @extend %basic-cell;
-  background-color: #f4e4f3;
+  background-color: #c8f2f6;
 }
 
 #active {
   @extend %basic-cell;
-  background-color: rgb(194, 199, 174);
+  background-color: #f4df21;
 }
 
-.yellow {
+.remaining {
   @extend %basic-cell;
-  background-color: yellow;
+  background-color: #115f919e;
 }
 
-.green {
+.visited {
   @extend %basic-cell;
-  background-color: green;
+  background-color: #495b62;
 }
 
 @media screen and (orientation: landscape) {
@@ -63,8 +64,14 @@ body {
 
   #stat {
     float: left;
-    margin: 20px;
+    margin: 30px;
+    clear: right;
   }
+
+  #topScore {
+    float: left;
+    margin: 30px;
+ }
 }
 
 @media screen and (orientation: portrait) {
@@ -74,8 +81,14 @@ body {
   }
   
   #stat {
-    margin: 20px;
+    margin: 30px;
+    clear: right;
   }
+
+  #topScore {
+    float: left;
+    margin: 30px;
+ }
 }
 
 .invisible {
@@ -83,14 +96,29 @@ body {
  }  
  
  .visible {
-   list-style: none;
+   background-color: rgb(167, 171, 175);
  }
  
  table tr td{
-   border: 1px solid black;
+   border-top: 1px solid black;
  }
  
  td {
+   padding: 15px;
    vertical-align: top;
    text-align: center;
+ }
+
+ p {
+   margin: 5px;
+ }
+
+ button {
+   border: none;
+   color: #d35a5a !important;
+ }
+
+ h3 {
+   color: #d35a5a;
+   margin-top: 0;
  }

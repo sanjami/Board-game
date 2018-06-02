@@ -11,7 +11,7 @@ import {
  } from '../actions/actionTypes';
 
 const initialState = {
-    currentLevel: 0,
+    currentLevel: 1,
     maxLevel: 1,
     minLevel: 1,
     remainingFields: [],

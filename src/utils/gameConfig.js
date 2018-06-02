@@ -1,1 +1,1 @@
-export const minLevel = 5;
+export const settingsMinLevel = 5;
