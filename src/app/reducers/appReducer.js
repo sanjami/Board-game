@@ -62,7 +62,8 @@ export default function appReducer (state = initialState, action) {
             return {
                 ...state,
                 remainingFields: [],
-                visitedFields: []
+                visitedFields: [],
+                activeFields: []
             }
         case SET_LEVELS_COMPLETED:
             return {

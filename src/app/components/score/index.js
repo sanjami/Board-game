@@ -16,7 +16,7 @@ const Score = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.levelsCompleted.map((row, i) =>
+                    {props.levelsCompleted.reverse().map((row, i) =>
                         <ScoreLine
                             key={i}
                             index={i}

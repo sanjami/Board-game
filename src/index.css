@@ -24,20 +24,20 @@ body {
 
 .modalButton {
   margin: 2%;
-  padding: 1%;
+  padding: 10px;
   color: black !important; }
 
 .cell {
   background-color: #c8f2f6; }
 
 #active {
-  background-color: #f4df21; }
+  background-color: #77e96c; }
 
 .remaining {
-  background-color: #115f919e; }
+  background-color: #557c95; }
 
 .visited {
-  background-color: #495b62; }
+  background-color: #abc6c8; }
 
 @media screen and (orientation: landscape) {
   #table {
@@ -67,9 +67,10 @@ body {
   display: none; }
 
 .visible {
-  background-color: #a7abaf; }
+  background-color: #a7abaf;
+  padding: 5px; }
 
-table tr td {
+table {
   border-top: 1px solid black; }
 
 td {
@@ -80,9 +81,15 @@ td {
 p {
   margin: 5px; }
 
-button {
+.plus {
   border: none;
-  color: #d35a5a !important; }
+  color: green;
+  font-weight: bold; }
+
+.hide {
+  border: none;
+  color: #d35a5a;
+  font-weight: bold; }
 
 h3 {
   color: #d35a5a;

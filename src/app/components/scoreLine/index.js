@@ -28,7 +28,7 @@ import PropTypes from 'prop-types';
 
                     <button
                         onClick={this.showTimes}
-                        className={this.state.showTimes ? "invisible" : "visible"}
+                        className={this.state.showTimes ? "invisible" : "plus"}
                     >
                         +
                     </button>
@@ -38,7 +38,7 @@ import PropTypes from 'prop-types';
                             times.map((time, j) => 
                                 <p key={index + j}>{`${time} seconds`}</p>)
                         }
-                        <button onClick={this.hideTimes}>X</button>
+                        <button onClick={this.hideTimes} className="hide">X</button>
                     </div>
                 </td>
                 <td>

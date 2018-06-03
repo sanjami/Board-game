@@ -30,7 +30,7 @@ body {
 
 .modalButton {
   margin: 2%;
-  padding: 1%;
+  padding: 10px;
   color: black !important;
 }
 
@@ -42,17 +42,17 @@ body {
 
 #active {
   @extend %basic-cell;
-  background-color: #f4df21;
+  background-color: #77e96c;
 }
 
 .remaining {
   @extend %basic-cell;
-  background-color: #115f919e;
+  background-color: #557c95;
 }
 
 .visited {
   @extend %basic-cell;
-  background-color: #495b62;
+  background-color: #abc6c8;
 }
 
 @media screen and (orientation: landscape) {
@@ -97,9 +97,10 @@ body {
  
  .visible {
    background-color: rgb(167, 171, 175);
+   padding: 5px;
  }
- 
- table tr td{
+
+ table {
    border-top: 1px solid black;
  }
  
@@ -113,10 +114,17 @@ body {
    margin: 5px;
  }
 
- button {
+ .plus {
    border: none;
-   color: #d35a5a !important;
- }
+   color: green;
+   font-weight: bold;
+  }
+  
+ .hide {
+  border: none;
+  color: #d35a5a;
+  font-weight: bold;
+}
 
  h3 {
    color: #d35a5a;
