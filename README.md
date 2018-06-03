@@ -3,11 +3,12 @@
 <h3>TradeCore task</h3>
 
 How to install this game:
+<ul>
+  <li>Clone the repository</li>
 
-Clone the repository
+  <li>Run npm install to install the dependencies</li>
 
-Run npm install to install the dependencies
+  <li>Run npm start to launch the app</li>
 
-Run npm start to launch the app
-
-Open localhost:3000 in browser
+  <li>Open localhost:3000 in browser</li>
+</ul>
