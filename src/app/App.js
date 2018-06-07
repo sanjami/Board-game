@@ -42,6 +42,14 @@ class App extends React.Component {
     Modal.setAppElement('body');
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+
+    if (this.state.modalIsOpen !== nextState.modalIsOpen || this.props !== nextProps) {
+      return true;
+    }   
+    return false;
+}
+
   openModal = (type) => {
     this.setState({ modalIsOpen: true, modalType: type });
   }
