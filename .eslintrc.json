@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "globals": {
+    "document": true,
+    "window": true
+  },
+  "rules": {
+    "jsx-a11y/href-no-hash": [0],
+    "no-underscore-dangle": [2, { "allow": [] }]
+  }
+}

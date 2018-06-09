@@ -7,68 +7,68 @@ import {
   SET_VISITED_FIELDS,
   SET_LIVES,
   RESET_GAME,
-  SET_LEVELS_COMPLETED
-} from './actionTypes'
+  SET_LEVELS_COMPLETED,
+} from './actionTypes';
 
 
 export function setLevel(level) {
   return {
     type: SET_CURRENT_LEVEL,
-    level
+    level,
   };
 }
 
 export function setMaxLevel(maxLevel) {
   return {
     type: SET_MAX_LEVEL,
-    maxLevel
-  }
+    maxLevel,
+  };
 }
 
 export function setMinLevel(minLevel) {
   return {
     type: SET_MIN_LEVEL,
-    minLevel
-  }
+    minLevel,
+  };
 }
 
 export function setRemainingFields(remainingFields) {
   return {
     type: SET_REMAINING_FIELDS,
-    remainingFields
-  }
+    remainingFields,
+  };
 }
 
 export function setActiveFields(activeFields) {
   return {
     type: SET_ACTIVE_FIELDS,
-    activeFields
-  }
+    activeFields,
+  };
 }
 
 export function setVisitedFields(visitedFields) {
   return {
     type: SET_VISITED_FIELDS,
-    visitedFields
-  }
+    visitedFields,
+  };
 }
 
 export function setLives(lives) {
   return {
     type: SET_LIVES,
-    lives
-  }
+    lives,
+  };
 }
 
 export function resetGame() {
   return {
-    type: RESET_GAME
-  }
+    type: RESET_GAME,
+  };
 }
 
 export function setLevelsCompleted(levelCompleted) {
   return {
     type: SET_LEVELS_COMPLETED,
-    levelCompleted
-  }
+    levelCompleted,
+  };
 }
