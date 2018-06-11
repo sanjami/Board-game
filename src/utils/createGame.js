@@ -1,36 +1,41 @@
+// function return array of field witch length is same as level
+
 import { moveOptions } from './constants';
 
-const createGame = (field, level, options, game) => {
+const createGame = (level, options, game) => {
   if (level === undefined || level === 0) {
     return game;
   }
 
-  const x = field.charAt(0);
-  const y = field.charAt(1);
-  const index = Math.floor(Math.random() * options.length);
-  const move = options[index];
-  const newX = parseInt(x, 10) + move[0];
-  const newY = parseInt(y, 10) + move[1];
+  let optionsTemp = options;
 
-  if (newX < 0 || newX > 9 || newY < 0 || newY > 9) {
-    const tempOptions = options.filter(element => element !== move);
-    if (tempOptions.length > 0) {
-      return createGame(field, level, tempOptions, game);
+  const currentField = game[game.length - 1];
+  let nextFieldTemp = '';
+
+  while (optionsTemp.length > 0) {
+    const x = currentField.charAt(0);
+    const y = currentField.charAt(1);
+
+    const index = Math.floor(Math.random() * optionsTemp.length);
+    const move = optionsTemp[index];
+
+    const newX = parseInt(x, 10) + move[0];
+    const newY = parseInt(y, 10) + move[1];
+    nextFieldTemp = newX.toString() + newY.toString();
+
+    if (newX >= 0 && newX <= 9 && newY >= 0 && newY <= 9 &&
+       !game.includes(nextFieldTemp)) {
+      game.push(nextFieldTemp);
+      const result = createGame(level - 1, moveOptions, game);
+      if (result !== false) {
+        return result;
+      }
+      game.pop();
     }
-    return createGame(field, level + 1, moveOptions, game.slice(0, -1));
+    optionsTemp = optionsTemp.filter(element => element !== move);
   }
 
-  const nextField = newX.toString() + newY.toString();
-
-  if (game.includes(nextField)) {
-    const tempOptions = options.filter(element => element !== move);
-    if (tempOptions.length > 0) {
-      return createGame(field, level, tempOptions, game);
-    }
-    return createGame(field, level + 1, moveOptions, game.slice(0, -1));
-  }
-  game.push(nextField);
-  return createGame(nextField, level - 1, moveOptions, game);
+  return false;
 };
 
 export default createGame;

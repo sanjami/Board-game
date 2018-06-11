@@ -13,6 +13,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export default function configureStore() {
   const store = createStore(
     persistedReducer,
+    /* eslint no-underscore-dangle: 0 */
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     applyMiddleware(),
   );

@@ -10,6 +10,8 @@ class ScoreLine extends React.Component {
     };
   }
 
+  // handlers functions for showing aditional times
+
     showTimes = () => {
       this.setState({ showTimes: true });
     }
@@ -17,6 +19,8 @@ class ScoreLine extends React.Component {
     hideTimes = () => {
       this.setState({ showTimes: false });
     }
+
+  // return one row for statistic table with times for one level
 
     render = () => {
       const { name, times } = this.props;
@@ -38,8 +42,8 @@ class ScoreLine extends React.Component {
 
             <div className={this.state.showTimes ? 'visible' : 'invisible'}>
               {
-                        times.map(time =>
-                          <p key={name + time}>{`${time} seconds`}</p>)
+                        times.map((time, index) =>
+                          <p key={`${time}${index}`}>{`${time} seconds`}</p>)
                     }
               <button onClick={this.hideTimes} className="hide">X</button>
             </div>
@@ -53,7 +57,6 @@ class ScoreLine extends React.Component {
 }
 
 ScoreLine.propTypes = {
-  index: PropTypes.number,
   name: PropTypes.number,
   times: PropTypes.array,
 };

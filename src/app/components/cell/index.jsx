@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Cell extends React.Component {
+  // avoid aditional rendering, render only fields that are in the game
   shouldComponentUpdate() {
     if ((this.props.remainingFields.length === 0) || this.props.remainingFields.includes(this.props.item) || this.props.visitedFields.includes(this.props.item) || this.props.activeFields.includes(this.props.item)) {
       return true;
@@ -9,6 +10,7 @@ class Cell extends React.Component {
     return false;
   }
 
+  // change class depending on status of the field, main visible logic of game
 
   divClass = () => {
     if (this.props.visitedFields.includes(this.props.item)) {

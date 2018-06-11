@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Cell from '../cell/index';
-import { board } from '../../../utils/constants';
+import { createBoard } from '../../../utils/constants';
 
 
 const Table = (props) => {
+  const board = createBoard();
   const content = board.map(item => (
     <Cell
       key={item}
@@ -28,12 +29,6 @@ Table.propTypes = {
   handleSelectFirstField: PropTypes.func,
   activeFields: PropTypes.array,
   visitedFields: PropTypes.array,
-};
-
-Table.defaultProps = {
-  remainingFields: [],
-  activeFields: [],
-  visitedFields: [],
 };
 
 export default Table;

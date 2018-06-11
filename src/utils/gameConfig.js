@@ -1,3 +1,3 @@
-const settingsMinLevel = 7;
+const settingsMinLevel = 10;
 
 export default settingsMinLevel;

@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import ScoreLine from '../scoreLine/index';
 
 const Score = (props) => {
+  // sort level from highest
+
   const levelsSorted = props.levelsCompleted.sort((a, b) => b.name - a.name);
+  // return table with statistic for level
   return (
     <div id="topScore" >
       <h3>Top score</h3>
@@ -18,7 +21,7 @@ const Score = (props) => {
         <tbody>
           {levelsSorted.map((row, i) =>
                     (<ScoreLine
-                      key={row.name}
+                      key={`${row.name}-${i}`}
                       index={i}
                       name={row.name}
                       times={row.times}
